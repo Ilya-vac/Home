@@ -1,0 +1,39 @@
+import java.util.function.DoubleFunction;
+
+public class SimpleIterationMethod {
+
+    public static void main(String[] args) {
+        DoubleFunction<Double> phi = x -> Math.cos(x);
+
+        double x0 = 0.5; 
+        
+        double epsilon = 1e-6; 
+        
+        int maxIterations = 1000;
+
+        try {
+            double root = solveBySimpleIteration(phi, x0, epsilon, maxIterations);
+            System.out.printf("Корень уравнения найден: %.6f\n", root);
+        } catch (RuntimeException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    public static double solveBySimpleIteration(DoubleFunction<Double> phi, double x0, double eps, int maxIter) {
+        double xPrev = x0;
+        double xNext;
+
+        for (int i = 1; i <= maxIter; i++) {
+            xNext = phi.apply(xPrev);
+
+            if (Math.abs(xNext - xPrev) < eps) {
+                System.out.println("Решение найдено за " + i + " итераций.");
+                return xNext;
+            }
+
+            xPrev = xNext;
+        }
+
+        throw new RuntimeException("Превышено максимальное количество итераций. Метод расходится.");
+    }
+}
