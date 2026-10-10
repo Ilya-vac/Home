@@ -1,0 +1,14 @@
+public class SwapVariables {
+    public static void main(String[] args) {
+        int a = 5;
+        int b = 10;
+
+        System.out.println("До перестановки: a = " + a + ", b = " + b);
+
+        a = a + b; // a становится равным 15 (5 + 10)
+        b = a - b; // b становится равным 5 (15 - 10)
+        a = a - b; // a становится равным 10 (15 - 5)
+
+        System.out.println("После перестановки: a = " + a + ", b = " + b);
+    }
+}
