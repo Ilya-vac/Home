@@ -1,0 +1,50 @@
+public class Main {
+    private static double f(double x) {
+        double tan = Math.tan(x);
+        return Math.abs(tan) < 1e-12 ? Double.POSITIVE_INFINITY : 2 * x - 1.0 / tan;
+    }
+
+    private static double df(double x) {
+        double sin = Math.sin(x);
+        return Math.abs(sin) < 1e-12 ? Double.POSITIVE_INFINITY : 2.0 + 1.0 / (sin * sin);
+    }
+
+    public static double newton(double x, double eps, int maxIter) {
+        for (int i = 0; i < maxIter; i++) {
+            double fx = f(x), dfx = df(x);
+            if (Double.isInfinite(fx) || Math.abs(dfx) < 1e-12) return Double.NaN;
+            double next = x - fx / dfx;
+            if (Math.abs(next - x) < eps) return next;
+            x = next;
+        }
+        return Double.NaN;
+    }
+
+    public static double chord(double a, double b, double eps, int maxIter) {
+        double fa = f(a), fb = f(b);
+        for (int i = 0; i < maxIter; i++) {
+            if (fa * fb > 0) break; // нет смены знака
+            double c = b - fb * (b - a) / (fb - fa);
+            double fc = f(c);
+            if (Double.isInfinite(fc)) return Double.NaN;
+
+            if (Math.abs(fc) < eps || Math.abs(b - a) < eps) return c;
+
+            if (fa * fc <= 0) { b = c; fb = fc; }
+            else { a = c; fa = fc; }
+        }
+        return Double.NaN;
+    }
+
+    public static void main(String[] args) {
+        double a = 0.0, b = 1.0, eps = 0.0001;
+        int maxIter = 100;
+        double x0 = 0.5;
+
+        double r1 = newton(x0, eps, maxIter);
+        System.out.println("Ньютон: " + (Double.isNaN(r1) ? "не найден" : r1));
+
+        double r2 = chord(a, b, eps, maxIter);
+        System.out.println("Хорды: " + (Double.isNaN(r2) ? "не найден" : r2));
+    }
+}
